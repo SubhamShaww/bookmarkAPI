@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require("mongoose");
+const _ = require("lodash");
 const {Schema} = mongoose;
 
 const port = 3000 || process.env.port;
@@ -121,7 +122,7 @@ app.route("/bookmarks/tags")
 app.route("/bookmarks/:bookmarkTitle")
 .delete((req, res) => {
     // delete a specific bookmark
-    const bookmarkTitle = req.params.bookmarkTitle;
+    const bookmarkTitle = _.toLower(req.params.bookmarkTitle);
 
     Bookmark.deleteOne({title: bookmarkTitle}, (err) => {
         if(!err) {
@@ -137,7 +138,7 @@ app.route("/bookmarks/:bookmarkTitle")
 app.route("/bookmarks/tags/:tagTitle")
 .delete((req, res) => {
     // delete a specific tag
-    const tagTitle = req.params.tagTitle;
+    const tagTitle = _.toLower(req.params.tagTitle);
 
     Tag.deleteOne({title: tagTitle}, (err) => {
         if(!err) {
@@ -151,8 +152,8 @@ app.route("/bookmarks/tags/:tagTitle")
 // add or delete tag from specified bookmark
 app.route("/bookmarks/:bookmarkTitle/:operation")
 .patch((req, res) => {
-    const bookmarkTitle = req.params.bookmarkTitle;
-    const operation = req.params.operation; // add or delete
+    const bookmarkTitle = _.toLower(req.params.bookmarkTitle);
+    const operation = _.toLower(req.params.operation); // add or delete
     let change;
 
     if(operation == "delete") {
